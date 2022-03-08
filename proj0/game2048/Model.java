@@ -1,5 +1,7 @@
 package game2048;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Observable;
 
@@ -94,6 +96,234 @@ public class Model extends Observable {
         setChanged();
     }
 
+    private Tile[] getTiles(int[][] bj, Side side){
+        int size = board.size();
+        Tile[] allTile = new Tile[size * size];
+        int index = 0;
+        if(side == Side.NORTH){
+            for (int c = 0; c < size; c++) {
+                for (int r = size - 1; r >= 0; r--) {
+                    Tile t = board.tile(c, r);
+                    if(t != null && bj[c][r] == 0){
+                        bj[c][r] = 1;
+                        allTile[index] = t;
+                        index++;
+                    }
+                }
+            }
+        } else if(side == Side.EAST){
+            for (int r = 0; r < size; r++) {
+                for (int c = size - 1; c >= 0; c--) {
+                    Tile t = board.tile(c, r);
+                    if(t != null && bj[c][r] == 0){
+                        bj[c][r] = 1;
+                        allTile[index] = t;
+                        index++;
+
+                    }
+                }
+            }
+        } else if(side == Side.SOUTH){
+            for (int c = 0; c < size; c++) {
+                for (int r = 0; r < size; r++) {
+                    Tile t = board.tile(c, r);
+                    if(t != null && bj[c][r] == 0){
+                        bj[c][r] = 1;
+                        allTile[index] = t;
+                        index++;
+
+                    }
+                }
+            }
+        } else if(side == Side.WEST){
+            for (int r = 0; r < size; r++) {
+                for (int c = 0; c < size; c++) {
+                    Tile t = board.tile(c, r);
+                    if(t != null && bj[c][r] == 0){
+                        bj[c][r] = 1;
+                        allTile[index] = t;
+                        index++;
+
+                    }
+                }
+            }
+        }
+        return allTile;
+    }
+
+
+
+    private int[][] creatBj() {
+        return new int[board.size()][board.size()];
+    }
+
+    private boolean canTheTileBeMoved(Tile t, Side side) {
+        int col = t.col();
+        int row = t.row();
+
+        if(side == Side.NORTH){
+            for (int r = row + 1; r < board.size(); r++) {
+                if(board.tile(col, r) == null){
+                    return true;
+                }
+            }
+        } else if(side == Side.EAST){
+            for (int c = col + 1; c < board.size(); c++) {
+                if(board.tile(c, row) == null){
+                    return true;
+                }
+            }
+        } else if(side == Side.SOUTH){
+            for (int r = row - 1; r >= 0; r--) {
+                if(board.tile(col, r) == null){
+                    return true;
+                }
+            }
+        } else if(side == Side.WEST){
+            for (int c = col - 1; c >= 0; c--) {
+                if(board.tile(c, row) == null){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void moveTile(Tile t, Side side, int[][] bj){
+        if(canTheTileBeMoved(t, side) || whetherTileCanBeMerged(t, side) != null){
+            int col = t.col();
+            int row = t.row();
+            Tile otherTile = whetherTileCanBeMerged(t, side);
+
+            if(otherTile != null && bj[otherTile.col()][otherTile.row()] != 2){
+                int colod = otherTile.col();
+                int rowod = otherTile.row();
+
+                board.move(colod, rowod, t);
+                score += t.value() * 2;
+                bj[colod][rowod] = 2;
+            } else {
+                if(side == Side.NORTH){
+                    for (int r = row + 1; r < board.size(); r++) {
+
+                        if(board.tile(col, r) != null){
+                            board.move(col, r - 1, t);
+                            //bj[col][r - 1] = 2;
+                            break;
+                        }
+
+                        if(r == board.size() - 1){
+
+                            board.move(col, r, t);
+
+                            break;
+                        }
+
+
+
+                    }
+                } else if(side == Side.EAST){
+                    for (int c = col + 1; c < board.size(); c++) {
+
+                        if(board.tile(c, row) != null){
+                            board.move(c - 1, row, t);
+                            //bj[c - 1][row] = 2;
+                            break;
+                        }
+
+                        if(c == board.size() - 1){
+
+                            board.move(c, row, t);
+
+                            break;
+                        }
+
+
+
+                    }
+                } else if(side == Side.SOUTH){
+                    for (int r = row - 1; r >= 0; r--) {
+
+                        if(board.tile(col, r) != null){
+                            board.move(col, r + 1, t);
+                            //bj[col][r + 1] = 2;
+                            break;
+                        }
+
+                        if(r == 0){
+
+                            board.move(col, r, t);
+
+                            break;
+                        }
+
+
+
+                    }
+                } else if(side == Side.WEST){
+                    for (int c = col - 1; c >= 0; c--) {
+
+                        if(board.tile(c, row) != null){
+                            board.move(c + 1, row, t);
+                            //bj[col][r + 1] = 2;
+                            break;
+                        }
+
+                        if(c == 0){
+
+                            board.move(c, row, t);
+
+                            break;
+                        }
+
+
+
+                    }
+                }
+            }
+        }
+    }
+
+    private Tile whetherTileCanBeMerged(Tile t, Side side) {
+        int col = t.col();
+        int row = t.row();
+
+        if(side == Side.NORTH){
+            for (int r = row + 1; r < board.size(); r++) {
+                Tile otherTile = board.tile(col, r);
+                if(otherTile != null){
+                    if(otherTile.value() == t.value()){
+                        return otherTile;
+                    }
+                    return null;
+                }
+            }
+        } else if(side == Side.EAST){
+            for (int c = col + 1; c < board.size(); c++) {
+                Tile otherTile = board.tile(c, row);
+                if(otherTile != null){
+                    if(otherTile.value() == t.value()){
+                        return otherTile;
+                    }
+                    return null;
+                }
+            }
+        } else if(side == Side.SOUTH){
+            for (int r = row - 1; r >= 0; r--) {
+                Tile otherTile = board.tile(col, r);
+                if(otherTile != null){
+                    if(otherTile.value() == t.value()){
+                        return otherTile;
+                    }
+                    return null;
+                }
+            }
+        }
+
+
+        return null;
+    }
+
     /** Tilt the board toward SIDE. Return true iff this changes the board.
      *
      * 1. If two Tile objects are adjacent in the direction of motion and have
@@ -106,10 +336,20 @@ public class Model extends Observable {
      *    value, then the leading two tiles in the direction of motion merge,
      *    and the trailing tile does not.
      * */
+
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
-
+        int size = board.size();
+        int[][] bz = creatBj();
+//        Tile t = getNotNullTile(bz, side);
+        Tile[] allTile = getTiles(bz, side);
+        for (int i = 0; i < allTile.length; i++) {
+            if(allTile[i] != null){
+                moveTile(allTile[i], side, bz);
+            }
+        }
+        changed = true;
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
@@ -137,7 +377,18 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+
+        int size = b.size();
+        for (int i = 0; i < size; i++){
+
+            for (int j = 0; j < size; j++){
+                Tile tile = b.tile(i, j);
+                if(tile == null){
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -147,7 +398,15 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+
+        int size = b.size();
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < size; j++){
+                if(b.tile(i, j) != null &&b.tile(i, j).value() == MAX_PIECE){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -159,12 +418,54 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if(emptySpaceExists(b) || isCanTilesBeMerged(b))
+            return true;
+        return false;
+    }
+
+
+
+    private static boolean whetherThereAreEqualTilesAround(Board b, int col, int row){
+        Tile tile = b.tile(col, row), tile1 = null, tile2 = null, tile3 = null, tile4 = null;
+        int size = b.size();
+        if(tile == null)
+            return false;
+        if(col - 1 >=0 && col - 1 < size) {
+            tile1 = b.tile(col - 1, row);
+        }
+        if(col + 1 >=0 && col + 1 < size) {
+            tile2 = b.tile(col + 1, row);
+        }
+        if(row - 1 >=0 && row - 1 < size) {
+            tile3 = b.tile(col, row - 1);
+        }
+        if(row + 1 >=0 && row + 1 < size) {
+            tile4 = b.tile(col, row + 1);
+        }
+        if(tile.value() == getNotNullValue(tile1) || tile.value() == getNotNullValue(tile2) || tile.value() == getNotNullValue(tile3) || tile.value() == getNotNullValue(tile4)){
+            return true;
+        }
+        return false;
+    }
+
+    private static int getNotNullValue(Tile tile){
+        return (tile == null) ? -1 : tile.value();
+    }
+
+    private static boolean isCanTilesBeMerged(Board b){
+        for (int i = 0; i < b.size(); i++){
+            for (int j = 0; j < b.size(); j++){
+                if(whetherThereAreEqualTilesAround(b, i, j)){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
 
     @Override
-     /** Returns the model as a string, used for debugging. */
+    /** Returns the model as a string, used for debugging. */
     public String toString() {
         Formatter out = new Formatter();
         out.format("%n[%n");
