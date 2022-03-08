@@ -189,7 +189,7 @@ public class Model extends Observable {
         return false;
     }
 
-    private void moveTile(Tile t, Side side, int[][] bj){
+    private boolean moveTile(Tile t, Side side, int[][] bj){
         if(canTheTileBeMoved(t, side) || whetherTileCanBeMerged(t, side) != null){
             int col = t.col();
             int row = t.row();
@@ -202,6 +202,7 @@ public class Model extends Observable {
                 board.move(colod, rowod, t);
                 score += t.value() * 2;
                 bj[colod][rowod] = 2;
+                return true;
             } else {
                 if(side == Side.NORTH){
                     for (int r = row + 1; r < board.size(); r++) {
@@ -209,14 +210,14 @@ public class Model extends Observable {
                         if(board.tile(col, r) != null){
                             board.move(col, r - 1, t);
                             //bj[col][r - 1] = 2;
-                            break;
+                            return true;
                         }
 
                         if(r == board.size() - 1){
 
                             board.move(col, r, t);
 
-                            break;
+                            return true;
                         }
 
 
@@ -228,14 +229,14 @@ public class Model extends Observable {
                         if(board.tile(c, row) != null){
                             board.move(c - 1, row, t);
                             //bj[c - 1][row] = 2;
-                            break;
+                            return true;
                         }
 
                         if(c == board.size() - 1){
 
                             board.move(c, row, t);
 
-                            break;
+                            return true;
                         }
 
 
@@ -247,14 +248,14 @@ public class Model extends Observable {
                         if(board.tile(col, r) != null){
                             board.move(col, r + 1, t);
                             //bj[col][r + 1] = 2;
-                            break;
+                            return true;
                         }
 
                         if(r == 0){
 
                             board.move(col, r, t);
 
-                            break;
+                            return true;
                         }
 
 
@@ -266,22 +267,24 @@ public class Model extends Observable {
                         if(board.tile(c, row) != null){
                             board.move(c + 1, row, t);
                             //bj[col][r + 1] = 2;
-                            break;
+                            return true;
                         }
 
                         if(c == 0){
 
                             board.move(c, row, t);
 
-                            break;
+                            return true;
                         }
 
-
-
                     }
+
                 }
+
             }
+
         }
+        return false;
     }
 
     private Tile whetherTileCanBeMerged(Tile t, Side side) {
@@ -318,6 +321,16 @@ public class Model extends Observable {
                     return null;
                 }
             }
+        } else if(side == Side.SOUTH){
+            for (int c = col - 1; c >= 0; c--) {
+                Tile otherTile = board.tile(c, row);
+                if(otherTile != null){
+                    if(otherTile.value() == t.value()){
+                        return otherTile;
+                    }
+                    return null;
+                }
+            }
         }
 
 
@@ -342,14 +355,18 @@ public class Model extends Observable {
         changed = false;
         int size = board.size();
         int[][] bz = creatBj();
+        boolean qx = false;
 //        Tile t = getNotNullTile(bz, side);
         Tile[] allTile = getTiles(bz, side);
         for (int i = 0; i < allTile.length; i++) {
             if(allTile[i] != null){
-                moveTile(allTile[i], side, bz);
+                qx = moveTile(allTile[i], side, bz);
+                if(!changed && qx){
+                    changed = true;
+                }
             }
         }
-        changed = true;
+
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
