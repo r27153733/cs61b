@@ -321,7 +321,7 @@ public class Model extends Observable {
                     return null;
                 }
             }
-        } else if(side == Side.SOUTH){
+        } else if(side == Side.WEST){
             for (int c = col - 1; c >= 0; c--) {
                 Tile otherTile = board.tile(c, row);
                 if(otherTile != null){
