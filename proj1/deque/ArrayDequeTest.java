@@ -7,11 +7,13 @@ import java.util.Iterator;
 import static org.junit.Assert.*;
 
 
-/** Performs some basic linked list tests. */
+/**
+ * Performs some basic linked list tests.
+ */
 public class ArrayDequeTest {
 
     @Test
-    public void maxTest(){
+    public void maxTest() {
         MaxArrayDeque<Integer> a = new MaxArrayDeque<>(Integer::compareTo);
         a.addFirst(1);
         a.addLast(2);
@@ -20,7 +22,7 @@ public class ArrayDequeTest {
     }
 
     @Test
-    public void iteratorTest(){
+    public void iteratorTest() {
         ArrayDeque<String> lld1 = new ArrayDeque<String>();
 
         lld1.addFirst("123");
@@ -29,7 +31,7 @@ public class ArrayDequeTest {
         lld1.addFirst("123");
 
         Iterator<String> iterator = lld1.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             assertEquals("123", iterator.next());
         }
 
@@ -47,22 +49,22 @@ public class ArrayDequeTest {
 
         ArrayDeque<String> lld1 = new ArrayDeque<String>();
 
-		assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
-		lld1.addFirst("front");
+        assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
+        lld1.addFirst("front");
 
-		// The && operator is the same as "and" in Python.
-		// It's a binary operator that returns true if both arguments true, and false otherwise.
+        // The && operator is the same as "and" in Python.
+        // It's a binary operator that returns true if both arguments true, and false otherwise.
         assertEquals(1, lld1.size());
         assertFalse("lld1 should now contain 1 item", lld1.isEmpty());
 
-		lld1.addLast("middle");
-		assertEquals(2, lld1.size());
+        lld1.addLast("middle");
+        assertEquals(2, lld1.size());
 
-		lld1.addLast("back");
-		assertEquals(3, lld1.size());
+        lld1.addLast("back");
+        assertEquals(3, lld1.size());
 
-		System.out.println("Printing out deque: ");
-		lld1.printDeque();
+        System.out.println("Printing out deque: ");
+        lld1.printDeque();
 
     }
 
@@ -73,16 +75,16 @@ public class ArrayDequeTest {
         System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
-		// should be empty
-		assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
+        // should be empty
+        assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
-		lld1.addFirst(10);
-		// should not be empty
-		assertFalse("lld1 should contain 1 item", lld1.isEmpty());
+        lld1.addFirst(10);
+        // should not be empty
+        assertFalse("lld1 should contain 1 item", lld1.isEmpty());
 
-		lld1.removeFirst();
-		// should be empty
-		assertTrue("lld1 should be empty after removal", lld1.isEmpty());
+        lld1.removeFirst();
+        // should be empty
+        assertTrue("lld1 should be empty after removal", lld1.isEmpty());
 
     }
 
@@ -114,8 +116,8 @@ public class ArrayDequeTest {
     public void multipleParamTest() {
 
 
-        ArrayDeque<String>  lld1 = new ArrayDeque<String>();
-        ArrayDeque<Double>  lld2 = new ArrayDeque<Double>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<Double> lld2 = new ArrayDeque<Double>();
         ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
 
         lld1.addFirst("string");
@@ -165,6 +167,7 @@ public class ArrayDequeTest {
 
 
     }
+
     @Test
     public void bigLLDequeTest1() {
 
