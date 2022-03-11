@@ -2,10 +2,10 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> implements Deque<T> {
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     private int size;
 
-    public class Node<T> {
+    private static class Node<T> {
         T value;
         Node<T> next;
         Node<T> prev;
@@ -173,12 +173,12 @@ public class LinkedListDeque<T> implements Deque<T> {
      * 是否相等
      */
     public boolean equals(Object o) {
-        LinkedListDeque<T> k = (LinkedListDeque<T>) o;
+        Deque<T> k = (Deque<T>) o;
         if (size != k.size()) {
             return false;
         } else {
             for (int i = 0; i < size; i++) {
-                if (this.get(i) != k.get(i)) {
+                if (get(i).equals(k.get(i))) {
                     return false;
                 }
             }
