@@ -16,6 +16,13 @@ public class ArrayDeque<T> implements Deque<T> {
         return nextLast + 1 == nextFirst;
     }
 
+    private boolean checkSize2() {
+        if (items.length <= 8) {
+            return false;
+        }
+        return (double) size / (double) items.length < 0.25;
+    }
+
     private void adjustSize(int newSize) {
         T[] newItems = (T[]) new Object[newSize];
         for (int i = 0; i < size; i++) {
@@ -36,20 +43,12 @@ public class ArrayDeque<T> implements Deque<T> {
         }
     }
 
-    private boolean isTheArrayFull() {
-        if (size - 2 == items.length) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * 添加对象到最前面
      */
     public void addFirst(T item) {
-        if (isTheArrayFull()) {
-            return;
-        }
+
         items[nextFirst] = item;
         nextFirst = changeNext(-1, nextFirst);
         ++size;
@@ -62,9 +61,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * 添加对象到最后面
      */
     public void addLast(T item) {
-        if (isTheArrayFull()) {
-            return;
-        }
+
         items[nextLast] = item;
         nextLast = changeNext(1, nextLast);
         ++size;
@@ -106,6 +103,9 @@ public class ArrayDeque<T> implements Deque<T> {
         items[index] = null;
         --size;
         nextFirst = index;
+        if (checkSize2()) {
+            adjustSize(size * 2);
+        }
         return res;
     }
 
@@ -121,6 +121,9 @@ public class ArrayDeque<T> implements Deque<T> {
         items[index] = null;
         --size;
         nextLast = index;
+        if (checkSize2()) {
+            adjustSize(size * 2);
+        }
         return res;
     }
 
