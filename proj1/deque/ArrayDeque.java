@@ -5,33 +5,66 @@ import java.util.Iterator;
 public class ArrayDeque<T> {
     private T[] items;
     private int size;
-    private int firstIndex;
-    private int startNull;
+    private int nextFirst = 4;
+    private int nextLast = 5;
     public ArrayDeque() {
-        items = (T[])new Object[50000000];
+        items = (T[])new Object[8];
+    }
+
+    private boolean checkSize(){
+        return nextLast + 1 == nextFirst;
+    }
+
+    private void adjustSize(int newSize){
+        T[] newItems = (T[])new Object[newSize];
+        for (int i = 0; i < size; i++) {
+            newItems[newItems.length/2 + i] = items[changeNext(i, nextFirst + 1)];
+        }
+        items = newItems;
+        nextFirst = items.length/2 - 1;
+        nextLast = changeNext(size + 1, nextFirst);
+    }
+
+    private int changeNext(int change, int next){
+        int newNext = next;
+        newNext += change;
+        if(newNext < 0){
+            return items.length + newNext;
+        } else {
+            return newNext % items.length;
+        }
+    }
+
+    private boolean isTheArrayFull(){
+        if(size - 2 == items.length){
+            return true;
+        }
+        return false;
     }
 
     /**添加对象到最前面*/
     public void addFirst(T item){
-        if(startNull == 0){
-            if(isEmpty()){
-                items[0] = item;
-                size++;
-                return;
-            }
-            items[items.length - 1 - firstIndex] = item;
-            firstIndex++;
-
-        } else {
-            items[startNull - 1] = item;
-            startNull--;
+        if(isTheArrayFull()){
+            return;
         }
-        size++;
+        items[nextFirst] = item;
+        nextFirst = changeNext(-1, nextFirst);
+        ++size;
+        if(checkSize()){
+            adjustSize(size * 2);
+        }
     }
     /**添加对象到最后面*/
     public void addLast(T item){
-        items[size + startNull - firstIndex] = item;
-        size++;
+        if(isTheArrayFull()){
+            return;
+        }
+        items[nextLast] = item;
+        nextLast = changeNext(1, nextLast);
+        ++size;
+        if(checkSize()){
+            adjustSize(size * 2);
+        }
     }
     /**列表是否为空*/
     public boolean isEmpty(){
@@ -43,61 +76,43 @@ public class ArrayDeque<T> {
     }
     /**从头到尾打印列表中的项目，用空格分隔。打印完所有项目后，换行。*/
     public void printDeque(){
-        for (int i = firstIndex; i > 0; i--) {
-            System.out.print(items[size - firstIndex] + " ");
+        int index;
+        for (int i = 0; i < size; i++) {
+            index = changeNext(i, nextFirst + 1);
+            if(items[index] == null){
+                return;
+            }
+            System.out.println(items[index] + " ");
         }
-        for (int i = startNull; i < size - firstIndex + startNull; i++) {
-            System.out.println(items[i] + " ");
-        }
-        System.out.println();
     }
     /**删除并返回位于最前面的对象。如果不存在此类对象，则返回 null*/
     public T removeFirst(){
-        if(size != 0){
-            T res;
-            if(firstIndex == 0){
-                res = items[startNull];
-                items[startNull] = null;
-                startNull++;
-
-            } else {
-                res = items[items.length - firstIndex];
-                firstIndex--;
-                items[items.length - firstIndex] = null;
-            }
-
-            size--;
-            return res;
+        int index = changeNext(1, nextFirst);
+        if(items[index] == null){
+            return null;
         }
-        return null;
+        T res = items[index];
+        items[index] = null;
+        --size;
+        nextFirst = index;
+        return res;
     }
     /**删除并返回位于最后面面的对象。如果不存在此类对象，则返回 null*/
     public T removeLast(){
-        if(size != 0){
-            T res;
-            if(firstIndex == 0) {
-                res = items[startNull + size - 1];
-                items[startNull + size - 1] = null;
-            } else {
-                res = items[size - firstIndex];
-                items[size - firstIndex] = null;
-            }
-
-
-            size--;
-            return res;
+        int index = changeNext(-1, nextLast);
+        if(items[index] == null){
+            return null;
         }
-        return null;
+        T res = items[index];
+        items[index] = null;
+        --size;
+        nextLast = index;
+        return res;
     }
     /**获取下标对应的对象*/
     public T get(int index){
-        if(firstIndex != 0 && index <= firstIndex){
-            return items[items.length - firstIndex + index];
-        } else {
-            return items[startNull + index - firstIndex];
-        }
 
-
+        return items[changeNext(index, nextFirst + 1)];
     }
     /**返回列表的迭代器*/
     public Iterator<T> iterator(){
