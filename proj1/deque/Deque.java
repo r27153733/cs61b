@@ -9,7 +9,6 @@ public interface Deque<T> {
         return size() == 0;
     }
 
-    ;
 
     int size();
 

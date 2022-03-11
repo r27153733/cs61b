@@ -24,6 +24,9 @@ public class ArrayDeque<T> implements Deque<T> {
     }
 
     private void adjustSize(int newSize) {
+        if (newSize < 8) {
+            newSize = 8;
+        }
         T[] newItems = (T[]) new Object[newSize];
         for (int i = 0; i < size; i++) {
             newItems[newItems.length / 2 + i] = items[changeNext(i, nextFirst + 1)];
@@ -161,7 +164,7 @@ public class ArrayDeque<T> implements Deque<T> {
      * 是否相等
      */
     public boolean equals(Object o) {
-        ArrayDeque<T> k = (ArrayDeque<T>) o;
+        Deque<T> k = (Deque<T>) o;
         if (size != k.size()) {
             return false;
         } else {

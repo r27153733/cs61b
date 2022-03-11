@@ -10,6 +10,16 @@ public class LinkedListDeque<T> implements Deque<T> {
         Node<T> next;
         Node<T> prev;
 
+        private T getRecursive(int index) {
+            if (index < 0) {
+                return null;
+            }
+            if (index == 0) {
+                return this.value;
+            }
+            return next.getRecursive(index - 1);
+        }
+
         private Node() {
 
         }
@@ -118,6 +128,20 @@ public class LinkedListDeque<T> implements Deque<T> {
             k = k.next;
         }
         return k.value;
+    }
+
+
+    public T getRecursive(int index) {
+        if (index < 0) {
+            return null;
+        }
+        if ((index + 1) > size) {
+            return null;
+        }
+        if (isEmpty()) {
+            return null;
+        }
+        return se.next.getRecursive(index);
     }
 
     /**

@@ -13,6 +13,36 @@ import static org.junit.Assert.*;
 public class ArrayDequeTest {
 
     @Test
+    public void maxMinTest(){
+        MaxArrayDeque<Integer> maxArrayDeque = new MaxArrayDeque<>(null);
+        maxArrayDeque.addLast(0);//
+        maxArrayDeque.removeFirst();//     ==> 0
+        maxArrayDeque.addFirst(2);//
+        maxArrayDeque.addFirst(3);//
+        maxArrayDeque.addLast(4);//
+        maxArrayDeque.addFirst(5);//
+        maxArrayDeque.addFirst(6);//
+        maxArrayDeque.addFirst(7);//
+        maxArrayDeque.removeLast();//      ==> 4
+        maxArrayDeque.get(0);//      ==> 7
+        maxArrayDeque.removeFirst();//     ==> 7
+        maxArrayDeque.addLast(11);//
+        maxArrayDeque.removeLast();//      ==> 11
+        maxArrayDeque.removeFirst();//     ==> 6
+        maxArrayDeque.removeFirst();//     ==> 5
+        maxArrayDeque.addFirst(15);//
+        maxArrayDeque.removeLast();//      ==> 2
+        maxArrayDeque.addFirst(17);//
+        maxArrayDeque.addFirst(18);//
+        maxArrayDeque.removeFirst();//     ==> 18
+        maxArrayDeque.addLast(20);//
+        maxArrayDeque.addLast(21);//
+        maxArrayDeque.removeLast();//      ==> 21
+        int res = maxArrayDeque.removeFirst();//     ==> null
+        assertEquals(17, res);
+    }
+
+    @Test
     public void fuTest() {
         ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
         arrayDeque.addFirst(0);
