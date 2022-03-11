@@ -5,20 +5,20 @@ import java.util.Iterator;
 public class LinkedListDeque<T> implements Deque<T> {
     private int size;
 
-    private static class Linked<T> {
+    public class Node<T> {
         T value;
-        Linked<T> next;
-        Linked<T> prev;
+        Node<T> next;
+        Node<T> prev;
 
-        private Linked() {
+        private Node() {
 
         }
 
-        public Linked(T value) {
+        private Node(T value) {
             this.value = value;
         }
 
-        public Linked(T value, Linked<T> next, Linked<T> prev) {
+        private Node(T value, Node<T> next, Node<T> prev) {
             this.value = value;
             this.next = next;
             this.prev = prev;
@@ -26,10 +26,10 @@ public class LinkedListDeque<T> implements Deque<T> {
     }
 
 
-    private Linked<T> se;
+    private Node<T> se;
 
     public LinkedListDeque() {
-        se = new Linked<>(null);
+        se = new Node<>(null);
         se.prev = se;
         se.next = se;
 
@@ -41,7 +41,7 @@ public class LinkedListDeque<T> implements Deque<T> {
      */
     public void addFirst(T item) {
 
-        Linked<T> first = new Linked<>(item, se.next, se);
+        Node<T> first = new Node<>(item, se.next, se);
         se.next.prev = first;
         se.next = first;
         size++;
@@ -51,7 +51,7 @@ public class LinkedListDeque<T> implements Deque<T> {
      * 添加对象到最后面
      */
     public void addLast(T item) {
-        Linked<T> last = new Linked<>(item, se, se.prev);
+        Node<T> last = new Node<>(item, se, se.prev);
         se.prev.next = last;
         se.prev = last;
 
@@ -69,7 +69,7 @@ public class LinkedListDeque<T> implements Deque<T> {
      * 从头到尾打印列表中的项目，用空格分隔。打印完所有项目后，换行。
      */
     public void printDeque() {
-        Linked<T> print = se.next;
+        Node<T> print = se.next;
         if (print.value != null) {
             System.out.print(print.value + " ");
             print = print.next;
@@ -109,7 +109,7 @@ public class LinkedListDeque<T> implements Deque<T> {
      * 获取下标对应的对象
      */
     public T get(int index) {
-        Linked<T> k = se.next;
+        Node<T> k = se.next;
         for (int i = 0; i < index; i++) {
 
             if (k.next.value == null) {
@@ -127,7 +127,7 @@ public class LinkedListDeque<T> implements Deque<T> {
 
 
         return new Iterator<T>() {
-            Linked<T> p = se.next;
+            Node<T> p = se.next;
 
             @Override
             public boolean hasNext() {

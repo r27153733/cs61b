@@ -13,7 +13,7 @@ public class ArrayDeque<T> implements Deque<T> {
     }
 
     private boolean checkSize() {
-        return nextLast + 1 == nextFirst;
+        return items.length - size == 2;
     }
 
     private boolean checkSize2() {
@@ -83,12 +83,10 @@ public class ArrayDeque<T> implements Deque<T> {
     public void printDeque() {
         int index;
         for (int i = 0; i < size; i++) {
-            index = changeNext(i, nextFirst + 1);
-            if (items[index] == null) {
-                return;
-            }
-            System.out.println(items[index] + " ");
+
+            System.out.print(get(i) + " ");
         }
+        System.out.println();
     }
 
     /**
@@ -168,7 +166,7 @@ public class ArrayDeque<T> implements Deque<T> {
             return false;
         } else {
             for (int i = 0; i < size; i++) {
-                if (this.get(i) != k.get(i)) {
+                if (get(i).equals(k.get(i))) {
                     return false;
                 }
             }

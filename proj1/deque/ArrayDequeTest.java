@@ -13,6 +13,44 @@ import static org.junit.Assert.*;
 public class ArrayDequeTest {
 
     @Test
+    public void fuTest() {
+        ArrayDeque<Integer> arrayDeque = new ArrayDeque<>();
+        arrayDeque.addFirst(0);
+        arrayDeque.addFirst(1);
+        arrayDeque.get(0);//      ==> 1
+        arrayDeque.addFirst(3);//
+        arrayDeque.removeFirst();//      ==> 3
+        arrayDeque.addFirst(5);//
+        arrayDeque.addLast(6);//
+        arrayDeque.addFirst(7);//
+        arrayDeque.addLast(8);//
+        arrayDeque.get(0);//       ==> 7
+        arrayDeque.get(3);//       ==> 0
+        arrayDeque.addLast(11);//
+        arrayDeque.removeFirst();//      ==> 7
+        arrayDeque.get(2);//       ==> 0
+        arrayDeque.addLast(14);//
+        arrayDeque.addFirst(15);//
+        arrayDeque.removeFirst();//      ==> 15
+        arrayDeque.get(4);//       ==> 8
+        arrayDeque.addFirst(18);//
+        arrayDeque.addLast(19);//
+        int res = arrayDeque.removeFirst();//      ==> 19
+        assertEquals(18, res);
+    }
+
+    @Test
+    public void n9Test() {
+        ArrayDeque<Integer> a = new ArrayDeque<>();
+        for (int i = 0; i < 9; i++) {
+            a.addFirst(i);
+        }
+        System.out.println(a.removeFirst());
+        System.out.println(a.removeLast());
+        a.printDeque();
+    }
+
+    @Test
     public void maxTest() {
         MaxArrayDeque<Integer> a = new MaxArrayDeque<>(Integer::compareTo);
         a.addFirst(1);
@@ -153,15 +191,15 @@ public class ArrayDequeTest {
         System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
 
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000000; i++) {
             lld1.addLast(i);
         }
 
-        for (double i = 0; i < 50; i++) {
+        for (double i = 0; i < 500000; i++) {
             assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
         }
 
-        for (double i = 99; i > 50; i--) {
+        for (double i = 999999; i > 500000; i--) {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
 
