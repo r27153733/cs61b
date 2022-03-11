@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Deque<T>{
     private int size;
 
     private static class Linked<T>{
@@ -50,10 +50,7 @@ public class LinkedListDeque<T> {
 
         size++;
     }
-    /**列表是否为空*/
-    public boolean isEmpty(){
-        return size == 0;
-    }
+
     /**列表大小*/
     public int size(){
         return size;
@@ -103,7 +100,24 @@ public class LinkedListDeque<T> {
     }
     /**返回列表的迭代器*/
     public Iterator<T> iterator(){
-        return null;
+
+
+        return new Iterator<T>(){
+            Linked<T> p = se.next;
+            @Override
+            public boolean hasNext() {
+
+                return p.value != null;
+            }
+
+            @Override
+            public T next() {
+                T res = p.value;
+                p = p.next;
+
+                return res;
+            }
+        };
     }
     /**是否相等*/
     public boolean equals(Object o){

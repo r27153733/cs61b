@@ -2,11 +2,39 @@ package deque;
 
 import org.junit.Test;
 
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 
 /** Performs some basic linked list tests. */
 public class ArrayDequeTest {
+
+    @Test
+    public void maxTest(){
+        MaxArrayDeque<Integer> a = new MaxArrayDeque<>(Integer::compareTo);
+        a.addFirst(1);
+        a.addLast(2);
+        a.addFirst(3);
+        System.out.println(a.max());
+    }
+
+    @Test
+    public void iteratorTest(){
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+
+        lld1.addFirst("123");
+        lld1.addFirst("123");
+        lld1.addFirst("123");
+        lld1.addFirst("123");
+
+        Iterator<String> iterator = lld1.iterator();
+        while (iterator.hasNext()){
+            assertEquals("123", iterator.next());
+        }
+
+    }
+
 
     @Test
     /** Adds a few things to the list, checking isEmpty() and size() are correct,

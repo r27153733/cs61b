@@ -2,7 +2,7 @@ package deque;
 
 import java.util.Iterator;
 
-public class ArrayDeque<T> {
+public class ArrayDeque<T> implements Deque<T>{
     private T[] items;
     private int size;
     private int nextFirst = 4;
@@ -66,10 +66,7 @@ public class ArrayDeque<T> {
             adjustSize(size * 2);
         }
     }
-    /**列表是否为空*/
-    public boolean isEmpty(){
-        return size == 0;
-    }
+
     /**列表大小*/
     public int size(){
         return size;
@@ -111,15 +108,41 @@ public class ArrayDeque<T> {
     }
     /**获取下标对应的对象*/
     public T get(int index){
-
-        return items[changeNext(index, nextFirst + 1)];
+        int index1 = changeNext(index, nextFirst + 1);
+        return items[index1];
     }
     /**返回列表的迭代器*/
     public Iterator<T> iterator(){
-        return null;
+
+
+        return new Iterator<T>(){
+            private int index;
+            @Override
+            public boolean hasNext() {
+
+                return get(index) != null;
+            }
+
+            @Override
+            public T next() {
+                T res = get(index);
+                index = changeNext(1, index);
+                return res;
+            }
+        };
     }
     /**是否相等*/
     public boolean equals(Object o){
-        return false;
+        ArrayDeque<T> k = (ArrayDeque<T>)o;
+        if(size != k.size()){
+            return false;
+        } else {
+            for (int i = 0; i < size; i++) {
+                if(this.get(i) != k.get(i)){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
