@@ -164,6 +164,9 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
      * 是否相等
      */
     public boolean equals(Object o) {
+        if (!(o instanceof Deque)) {
+            return false;
+        }
         Deque<T> k = (Deque<T>) o;
         if (size != k.size()) {
             return false;
