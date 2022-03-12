@@ -13,6 +13,17 @@ import static org.junit.Assert.*;
 public class ArrayDequeTest {
 
     @Test
+    public void dengYvTest(){
+        ArrayDeque<Integer> a = new ArrayDeque<>();
+        a.addFirst(1);
+        a.addFirst(1123);
+        a.addFirst(13);
+        boolean equals = a.equals(a);
+        assertTrue("lld1 should be empty after removal", equals);
+    }
+
+
+    @Test
     public void maxMinTest(){
         MaxArrayDeque<Integer> maxArrayDeque = new MaxArrayDeque<>(null);
         maxArrayDeque.addLast(0);//
