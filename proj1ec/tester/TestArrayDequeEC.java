@@ -6,7 +6,7 @@ import edu.princeton.cs.introcs.StdRandom;
 import org.junit.Test;
 import student.StudentArrayDeque;
 
-public class TesterArrayDequeEC {
+public class TestArrayDequeEC {
     @Test
     public void randomTest() {
         StudentArrayDeque<Integer> s = new StudentArrayDeque<>();
