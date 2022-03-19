@@ -23,12 +23,17 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
     }
 
+    public void printInOrder() {
+
+    }
+
     /**
      * 从此地图中删除所有映射。
      */
     @Override
     public void clear() {
         root = null;
+        size = 0;
     }
 
     /**
@@ -40,7 +45,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     private Node get(Node node, K key) {
-        if (node == null) {
+        if (node.key.equals(key)) {
             return null;
         }
         int compare = key.compareTo(node.key);
@@ -58,6 +63,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public V get(K key) {
+
         return get(root, key).value;
     }
 
