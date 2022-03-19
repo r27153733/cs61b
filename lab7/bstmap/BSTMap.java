@@ -36,16 +36,20 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         size = 0;
     }
 
+
+
     /**
      * 如果此映射包含指定键的映射，则返回 true。
      */
     @Override
     public boolean containsKey(K key) {
-        return get(key) != null;
+        Node node = get(root, key);
+
+        return node != null;
     }
 
     private Node get(Node node, K key) {
-        if (node.key.equals(key)) {
+        if (node == null) {
             return null;
         }
         int compare = key.compareTo(node.key);
