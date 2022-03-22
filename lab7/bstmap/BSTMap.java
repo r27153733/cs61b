@@ -135,8 +135,21 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         throw new UnsupportedOperationException();
     }
 
+    private int dg(K[] k, Node node, int js) {
+        if (node == null) {
+            return js;
+        }
+
+        js = dg(k, node.left, js);
+        js = dg(k, node.right, js);
+        k[js] = node.key;
+        --js;
+        return js;
+    }
+
     @Override
     public Iterator<K> iterator() {
+
         throw new UnsupportedOperationException();
     }
 }

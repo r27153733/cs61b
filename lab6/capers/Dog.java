@@ -64,9 +64,6 @@ public class Dog implements Serializable { // TODO
     public void saveDog() throws IOException {
         // TODO (hint: don't forget dog names are unique)
         File dog = join(".capers", "dogs", this.name);
-        if (!dog.exists()) {
-            dog.createNewFile();
-        }
         writeObject(dog, (Serializable) this);
     }
 
