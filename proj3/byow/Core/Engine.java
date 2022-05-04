@@ -146,7 +146,7 @@ public class Engine {
                 point.setY(point.getY() + 2);
             }
 
-            return point.getX() == WIDTH - FRAME;
+            return point.getX() >= WIDTH - FRAME;
         }
 
         public static void randomMoveXL(Point point, Random seedToRandom) {
@@ -188,7 +188,7 @@ public class Engine {
                 point.setX(point.getX() + 2);
             }
 
-            return point.getY() == HEIGHT - FRAME;
+            return point.getY() >= HEIGHT - FRAME;
         }
 
         public static void randomMoveYD(Point point, Random seedToRandom) {
@@ -208,13 +208,14 @@ public class Engine {
         }
 
         public static boolean endMoveYD(Point point) {
+
             if (point.getX() >= WIDTH - FRAME) {
                 point.setX(point.getX() - 2);
             } else if (point.getX() < FRAME) {
                 point.setX(point.getX() + 2);
             }
 
-            return point.getY() == FRAME;
+            return point.getY() <= FRAME;
         }
 
     }
