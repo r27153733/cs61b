@@ -67,8 +67,8 @@ public class Engine {
 
         Random seedToRandom = new Random(Long.parseLong(seed));
         createASkeleton(finalWorldFrame, seedToRandom, offsetString);
-        ter.initialize(WIDTH, HEIGHT);
-        ter.renderFrame(finalWorldFrame);
+        //ter.initialize(WIDTH, HEIGHT);
+        //ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
 
