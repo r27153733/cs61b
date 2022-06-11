@@ -72,6 +72,7 @@ public class Engine {
         return finalWorldFrame;
     }
 
+
     private static String[] handleString(String input) throws IOException, ClassNotFoundException {
         if (input.startsWith("l", 0) || input.startsWith("L", 0)) {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("date.save"));
@@ -80,7 +81,7 @@ public class Engine {
             input = save + input.substring(1, input.length());
         }
         if (input.startsWith(":q", input.length() - 2) || input.startsWith(":Q", input.length() - 2)) {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("file.ser"));
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("dataSave.txt"));
             objectOutputStream.writeObject(input);
             objectOutputStream.close();
             System.exit(0);
