@@ -67,8 +67,8 @@ public class Engine {
 
         Random seedToRandom = new Random(Long.parseLong(seed));
         createASkeleton(finalWorldFrame, seedToRandom, offsetString);
-        //ter.initialize(WIDTH, HEIGHT);
-        //ter.renderFrame(finalWorldFrame);
+        ter.initialize(WIDTH, HEIGHT);
+        ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
 
@@ -80,9 +80,10 @@ public class Engine {
             input = save + input.substring(1, input.length());
         }
         if (input.startsWith(":q", input.length() - 2) || input.startsWith(":Q", input.length() - 2)) {
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("date.save"));
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("file.ser"));
             objectOutputStream.writeObject(input);
             objectOutputStream.close();
+            System.exit(0);
         }
         for (int i = 0; i < input.length(); i++) {
             if (input.charAt(i) == 'N' || input.charAt(i) == 'n') {
