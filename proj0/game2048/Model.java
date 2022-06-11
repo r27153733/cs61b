@@ -435,9 +435,7 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
-        if(emptySpaceExists(b) || isCanTilesBeMerged(b))
-            return true;
-        return false;
+        return emptySpaceExists(b) || isCanTilesBeMerged(b);
     }
 
 

@@ -4,6 +4,7 @@ import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
 
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -54,12 +55,51 @@ public class Engine {
 
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
         initWorld(finalWorldFrame);
-        String seed = input.substring(1, input.length() - 1);
+        //String seed = input.substring(1, input.length() - 1);
+        String[] strings = new String[0];
+        try {
+            strings = handleString(input);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        String seed = strings[0];
+        String offsetString = strings[1];
+
         Random seedToRandom = new Random(Long.parseLong(seed));
-        createASkeleton(finalWorldFrame, seedToRandom);
-        //ter.initialize(WIDTH, HEIGHT);
+        createASkeleton(finalWorldFrame, seedToRandom, offsetString);
+        ter.initialize(WIDTH, HEIGHT);
         //ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
+    }
+
+    private static String[] handleString(String input) throws IOException, ClassNotFoundException {
+        if (input.startsWith("l", 0) || input.startsWith("L", 0)) {
+            ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream("date.save"));
+            String save = (String) objectInputStream.readObject();
+            objectInputStream.close();
+            input = save + input.substring(1, input.length());
+        }
+        if (input.startsWith(":q", input.length() - 2) || input.startsWith(":Q", input.length() - 2)) {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("date.save"));
+            objectOutputStream.writeObject(input);
+            objectOutputStream.close();
+        }
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == 'N' || input.charAt(i) == 'n') {
+                ++i;
+                int j = i;
+                int k = i;
+                while (input.charAt(i) != 'S' && input.charAt(i) != 's') {
+                    j = i;
+                    ++i;
+                }
+                ++i;
+                String seed = input.substring(k, j + 1);
+                String offsetString = input.substring(i, input.length());
+                return new String[]{seed, offsetString};
+            }
+        }
+        throw new RuntimeException("输入异常");
     }
 
     private static void initWorld(TETile[][] tiles) {
@@ -346,7 +386,7 @@ public class Engine {
         }
     }
 
-    private static void createASkeleton(TETile[][] finalWorldFrame, Random seedToRandom) {
+    private static void createASkeleton(TETile[][] finalWorldFrame, Random seedToRandom, String offset) {
         int x = FRAME;
         int y = seedToRandom.nextInt(HEIGHT - 2 * FRAME) + FRAME;
         finalWorldFrame[x][y] = Tileset.FLOOR;
@@ -364,19 +404,6 @@ public class Engine {
                 return Point.endMoveXR(point);
             }
         });
-        /*
-        HashSet<Point> gap = generateCorridor(finalWorldFrame, points);
-        System.out.println(gap.size());
-        gap.forEach(p -> {
-            if (finalWorldFrame[p.getX()][p.getY()].equals(Tileset.NOTHING)) {
-                //finalWorldFrame[p.getX()][p.getY()] = Tileset.FLOWER;
-            } else {
-                //finalWorldFrame[p.getX()][p.getY()] = Tileset.MOUNTAIN;
-            }
-        });
-        //finalWorldFrame[7][19] = Tileset.SAND;
-
-         */
         randomlyGenerateBranches(finalWorldFrame, seedToRandom, points);
         for (int i = 0; i < 10; i++) {
             generateRoom(finalWorldFrame, seedToRandom, points);
@@ -384,34 +411,66 @@ public class Engine {
 
         HashSet<Point> gap = generateCorridor(finalWorldFrame, points);
         //finalWorldFrame[48][9] = Tileset.FLOWER;
-        door(finalWorldFrame, gap);
+        door(finalWorldFrame, gap, offset);
     }
 
-    private static void door(TETile[][] finalWorldFrame, HashSet<Point> gap) {
+    private static void door(TETile[][] finalWorldFrame, HashSet<Point> gap, String offset) {
         AtomicBoolean a = new AtomicBoolean(false);
-        gap.forEach(p -> {
+        for (Point p : gap) {
             if (finalWorldFrame[p.getX()][p.getY()].equals(Tileset.WALL)) {
                 int cont = 0;
-
+                int hiTo = 0;
 
                 if (!isItOutOfBounds(p.getX(), p.getY() - 1, 0) && !isItOutOfBounds(p.getX(), p.getY() + 1, 0)) {
                     if (finalWorldFrame[p.getX()][p.getY() - 1].equals(Tileset.NOTHING)) {
                         cont -= 2;
                     } else if (finalWorldFrame[p.getX()][p.getY() - 1].equals(Tileset.FLOOR)) {
                         cont += 1;
+                        hiTo = -1;
                     }
                     if (finalWorldFrame[p.getX()][p.getY() + 1].equals(Tileset.NOTHING)) {
                         cont -= 2;
                     } else if (finalWorldFrame[p.getX()][p.getY() + 1].equals(Tileset.FLOOR)) {
                         cont += 1;
+                        hiTo = 1;
                     }
-                    if (cont == -1 && !a.get()) {
+                    if (cont == -1) {
                         finalWorldFrame[p.getX()][p.getY()] = Tileset.LOCKED_DOOR;
-                        a.set(true);
+                        hiToMove(p.getX(), p.getY(), offset, finalWorldFrame, hiTo);
+                        return;
                     }
                 }
             }
-        });
+        }
+    }
+
+    private static void hiToMove(int x, int y, String offset, TETile[][] finalWorldFrame, int a) {
+        if (finalWorldFrame[x][y + 1].equals(Tileset.FLOOR)) {
+            ++y;
+        } else {
+            --y;
+        }
+        for (int i = 0; i < offset.length(); i++) {
+            if (offset.charAt(i) == 'S' || offset.charAt(i) == 's') {
+
+                if (!finalWorldFrame[x][y - 1].equals(Tileset.WALL)) {
+                    --y;
+                }
+            } else if (offset.charAt(i) == 'W' || offset.charAt(i) == 'w') {
+                if (!finalWorldFrame[x][y + 1].equals(Tileset.WALL)) {
+                    ++y;
+                }
+            } else if (offset.charAt(i) == 'A' || offset.charAt(i) == 'a') {
+                if (!finalWorldFrame[x - 1][y].equals(Tileset.WALL)) {
+                    --x;
+                }
+            } else if (offset.charAt(i) == 'D' || offset.charAt(i) == 'd') {
+                if (!finalWorldFrame[x + 1][y].equals(Tileset.WALL)) {
+                    ++x;
+                }
+            }
+        }
+        finalWorldFrame[x][y] = Tileset.AVATAR;
     }
 
     private static void generateRoom(TETile[][] finalWorldFrame, Random seedToRandom, ArrayList<Point> points) {
