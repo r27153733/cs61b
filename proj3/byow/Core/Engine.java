@@ -453,18 +453,18 @@ public class Engine {
         for (int i = 0; i < offset.length(); i++) {
             if (offset.charAt(i) == 'S' || offset.charAt(i) == 's') {
 
-                if (!finalWorldFrame[x][y - 1].equals(Tileset.WALL)) {
+                if (!isItOutOfBounds(x, y - 1, 0) && !finalWorldFrame[x][y - 1].equals(Tileset.WALL)) {
                     --y;
                 }
             } else if (offset.charAt(i) == 'W' || offset.charAt(i) == 'w') {
-                if (!finalWorldFrame[x][y + 1].equals(Tileset.WALL)) {
+                if (!isItOutOfBounds(x, y + 1, 0) && !finalWorldFrame[x][y + 1].equals(Tileset.WALL)) {
                     ++y;
                 }
             } else if (offset.charAt(i) == 'A' || offset.charAt(i) == 'a') {
-                if (!finalWorldFrame[x - 1][y].equals(Tileset.WALL)) {
+                if (!isItOutOfBounds(x - 1, y, 0) && !finalWorldFrame[x - 1][y].equals(Tileset.WALL)) {
                     --x;
                 }
-            } else if (offset.charAt(i) == 'D' || offset.charAt(i) == 'd') {
+            } else if (!isItOutOfBounds(x + 1, y, 0) && offset.charAt(i) == 'D' || offset.charAt(i) == 'd') {
                 if (!finalWorldFrame[x + 1][y].equals(Tileset.WALL)) {
                     ++x;
                 }
