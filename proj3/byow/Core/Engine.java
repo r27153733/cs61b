@@ -84,7 +84,6 @@ public class Engine {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream("dataSave.txt"));
             objectOutputStream.writeObject(input);
             objectOutputStream.close();
-            System.exit(0);
         }
         for (int i = 0; i < input.length(); i++) {
             if (input.charAt(i) == 'N' || input.charAt(i) == 'n') {
